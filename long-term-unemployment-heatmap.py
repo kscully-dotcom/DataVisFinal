@@ -137,18 +137,20 @@ period_order = ['Jan-2005',
                  ]
 df['Period'] = pd.Categorical(df['Period'], categories=period_order, ordered=True)
 
-dff = df.groupby(by=['Age', 'Period'], as_index=False)['Unemployed'].sum()
+dff_men = df[df['Gender'] == 'Men'].copy()
+dfff_men = dff_men.groupby(by=['Age', 'Period'], as_index=False)['Unemployed'].sum()
 
 dfff = (
-    dff
+    dfff_men
     .pivot(columns=["Age"], index=["Period"], values="Unemployed")
 )
 
-dff2 = df.groupby(by=['Gender', 'Period'], as_index=False)['Unemployed'].sum()
+dff_women = df[df['Gender'] == 'Women'].copy()
+dfff_women = dff_women.groupby(by=['Age', 'Period'], as_index=False)['Unemployed'].sum()
 
 dfff2 = (
-    dff2
-    .pivot(columns=["Gender"], index=["Period"], values="Unemployed")
+    dfff_women
+    .pivot(columns=["Age"], index=["Period"], values="Unemployed")
 )
 
 # Draw a heatmap with the numeric values in each cell
@@ -156,18 +158,18 @@ f, axes = plt.subplots(1, 2, figsize=(10, 12), sharey=True)
 f.suptitle("Long Term Unemployment from Jan 2005 to Feb 2015", fontsize=14, fontweight='bold', ha='center')
 sns.heatmap(dfff, annot=False, linewidths=.5, ax=axes[0], cbar=False)
 sns.heatmap(dfff2, annot=False, linewidths=.5, ax=axes[1], cbar=True)
-f.subplots_adjust(left=0.4)
-axes[1].set_ylabel('')
-axes[0].set_ylabel('')
-axes[0].set_xlabel('')
-axes[1].set_xlabel('')
-axes[0].set_title("Age Group", fontsize=12, fontweight='bold')
-axes[1].set_title("Gender", fontsize=12, fontweight='bold')
+# f.subplots_adjust(left=0.4)
+# axes[1].set_ylabel('')
+# axes[0].set_ylabel('')
+# axes[0].set_xlabel('')
+# axes[1].set_xlabel('')
+# axes[0].set_title("Age Group", fontsize=12, fontweight='bold')
+# axes[1].set_title("Gender", fontsize=12, fontweight='bold')
 
-axes[1].tick_params(labelright=False)
-f.align_labels()
-plt.xticks(rotation=90)
-plt.subplots_adjust(wspace=0, hspace=0)
+# axes[1].tick_params(labelright=False)
+# f.align_labels()
+# plt.xticks(rotation=90)
+# plt.subplots_adjust(wspace=0, hspace=0)
 
 cbar = axes[1].collections[0].colorbar
 cbar.set_ticks([500000, 1000000, 1500000, 2000000, 2500000, 3000000, 3500000, 4000000])
